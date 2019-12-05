@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <locale>
+#include <fstream>
 //#include "Chess.h"
 using namespace std;
 
@@ -12,14 +13,16 @@ bool writeFile(string str);
 int main()
 {
  //  Board chessBoard;
-   string str, player1White, player2Black, fileName;
+   char ch;
+   string player1White, player2Black, fileName;
    bool playgame = true;
+
    cout << "   _____ _    _ ______  _____ _____ \n  / ____| |  | |  ____|/ ____/ ____| \n | |    | |__| | |__  | (___| (___  \n | |    |  __  |  __|  \\___  \\___ \\ \n | |____| |  | | |____ ____) |___) | \n  \\_____|_|  |_|______|_____/_____/ \n" << endl;
    cout << "Welcome to Chess"<<endl<<endl;
    cout << "Would you like to start a new game or continue playing a saved game?"<<endl;
    cout << "Type N for New or S for Saved: ";
-   cin >> str;
-   if(toupper(str[0]) == 'N')
+   cin >> ch;
+   if(toupper(ch) == 'N')
    {
      cout << "Enter the name of Player 1 (White Chess Piece):";
      cin >> player1White;
@@ -42,28 +45,39 @@ int main()
          break;
      }
    }
-/*
+
    while(playgame)
    {
-      chessBoard.setupBoard();
-      while (chessBoard.playGame());
+//      chessBoard.setupBoard();
+//      while (chessBoard.playGame());
       cout << "Do you want to play again? (Y or N)";
-      cin >> str;
-      if (toupper(str) != "Y" )
+      cin >> ch;
+      if (toupper(ch) != 'N' )
         playgame = false;
     }
-*/
+
    return 0;
 }
 
 bool readFile(string fileName)
 {
+ ifstream inFile;
   // read saved game
+ inFile.open(fileName);
+ if (!inFile)
+  {
+     cerr << "Unable to open file" << fileName << endl;
+     return 1;
+  }
+ inFileName.close();
  return 0;
 }
 
-bool writeFile(string fileName)
+bool writeFile(string outFileName)
 {
   // save game
+
+  //fstream.close();
+
   return 0;
 }
