@@ -1,6 +1,6 @@
-1George Washington   $1.00
-2Greece              The Parthenon
-3Hippopotamus        Hungry Hungry
-4Spaghetti           Pasta
-5Serena Williams     Tennis
-6Bradley Cooper      Limitless
+1GEORGE WASHINGTON   $1.00
+2GREECE              The Parthenon
+3HIPPOPOTOMUS        Hungry Hungry
+4SPAGHETTI           Pasta
+5SERENA WILLIAMS     Tennis
+6BRADLEY COOPER      Limitless

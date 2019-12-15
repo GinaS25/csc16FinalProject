@@ -5,16 +5,11 @@ using namespace std;
 /* prototypes */
 bool playHangman();
 bool readFile();
-void printLogo();
-void printBoard();
 
 /* This is a Hangman Game */
 
 int main()
 {
-  printLogo();
-  printBoard();
-
   // Play hangman until user exits
   for(;;)
   {

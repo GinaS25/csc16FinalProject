@@ -2,55 +2,30 @@
 #define HANGMAN_H
 
 #include<iostream>
-/*
-  enum Categories {PERSON,PLACE,THING,FOOD,SPORTS_PERSONALITY,ACTOR};
-                 //  0      1     2    3     4                  5 
-  const int MaxBadGuesses = 9;        // Max guesses before losing
-  const int MaxSize = 20;             // Max letters in answer
-  const int HintSize = 30;            // Max size of hint
+
+  enum Categories {PERSON=1,PLACE,THING,FOOD,SPORTS_PERSONALITY,ACTOR};
+                 //      1     2    3     4               5       6
+  enum BadGuessDraw {EMPTY,HEAD,BODY,LEFT_ARM, RT_ARM,LEFT_LEG,RT_LEG, LEFT_EYE, RT_EYE, MOUTH};
+                 //      1     2    3         4       5        6       7        8
+  const int MaxBadGuesses = 9;   // Max guesses before losing
+  const int MaxSize = 20;        // Max letters in answer
+  const int MaxCatSize = 25;   //Max size of category description
   const int PoleSize = 4;  //Size of pole in board
-
   const int MaxTries = MaxBadGuesses+MaxSize;
-  char guessedLetters[MaxTries];     // Array to hold the guesses
-  char answer[MaxSize];           // Answer read from file
-  char lettersFound[MaxSize];     // String with letters found
-  char hint[HintSize];               // Hint string read from file
+
+  string answer;
+  string lettersFound;     // String with letters found
+  string hint;
   char ch;
+  bool solved;
   int category;
-  int guessCtr = 0;   //Letters guessed counter
+  string categoryDesc;
   int badGuessCtr = 0;  //Bad guesses counter
-*/
-/*
-class HangMan
-{
-private:
-/*
-  enum Categories {PERSON,PLACE,THING,FOOD,SPORTS_PERSONALITY,ACTOR};
-                 //  0      1     2    3     4                  5
-  int MaxBadGuesses;        // Max guesses before losing
-  int MaxSize;             // Max letters in answer
-  int HintSize;            // Max size of hint
-  int MaxTries;
 
-  char guessedLetters[MaxTries];     // Array to hold the guesses
-  char answer[MaxSize];           // Answer read from file
-  char lettersFound[MaxSize];     // String with letters found
-  char hint[HintSize];               // Hint string read from file
-  char ch;
-  int category;
-  int guessCtr = 0;   //Letters guessed counter
-  int badGuessCtr = 0;
-
-public:
-  bool playHangman();
-  bool readFile();
-  bool displayCat();
+  /* prototypes */
   void printLogo();
-  void printBoard();
-
-  //Board();
-  //~Board();
-};
-*/
+  void printBoard(string str);
+  void printKeyboard(string str);
+  bool readCategoryFile(int cat);
 
 #endif //HANGMAN_H

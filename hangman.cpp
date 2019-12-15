@@ -9,115 +9,40 @@ using namespace std;
 #include <boost/algorithm/string/trim.hpp>
 #include "Hangman.h"
 
-  enum Categories {PERSON=1,PLACE,THING,FOOD,SPORTS_PERSONALITY,ACTOR};
-                 //      1     2    3     4               5       6
-  enum BadGuessDraw {HEAD=1,BODY,RT_ARM,LEFT_ARM,RT_LEG,LEFT_LEG, RT_EYE, LEFT_EYE, MOUTH};
-                 //      1     2    3         4       5        6       7        8
-  const int MaxBadGuesses = 9;   // Max guesses before losing
-  const int MaxSize = 20;        // Max letters in answer
-  const int HintSize = 30;       // Max size of hint
-  const int PoleSize = 4;  //Size of pole in board
-
-  const int MaxTries = MaxBadGuesses+MaxSize;
-  char guessedLetters[MaxTries];     // Array to hold the guesses
-  //char answer[MaxSize];           // Answer read from file
-  string answer;
-  char lettersFound[MaxSize];     // String with letters found
-  char hint[HintSize];               // Hint string read from file
-  char ch;
-  int category;
-  string categoryDesc;
-//  int guessCtr = 0;   //Letters guessed counter
-  int badGuessCtr = 0;  //Bad guesses counter
-  string AthruM = "A|B|C|D|E|F|G|H|I|J|K|L|M";
-  string NthruZ = "N|O|P|Q|R|S|T|U|V|W|X|Y|Z";
-
-//prototype
-void printLogo();
-void printBoard();
-void printKeyboard();
-/*
-HangMan::Hangman()
-{
-  MaxBadGuesses = 9;        // Max guesses before losing
-  MaxSize = 20;             // Max letters in answer
-  HintSize = 30;            // Max size of hint
-  MaxTries = MaxBadGuesses+MaxSize;
-
-  //char guessedLetters[MaxTries];     // Array to hold the guesses
-  //char answer[MaxSize];           // Answer read from file
-  //char lettersFound[MaxSize];     // String with letters found
-  //char hint[HintSize];               // Hint string read from file
-}
-*/
-
-bool displayCat()
-{
-
- //This is a 1 or 2 Player Hangman Game. Players can save the game and reload it 
-
-//Hard coded for now. Must be fixed
-category = 1;
-//strcpy(answer, "GREECE              ");
-//strcpy(hint, "The Parthenon");
-
-  cout<<endl<<"                  CATEGORY: ";
-  switch(category)
-  {
-     case PERSON:
-       cout<<"Person"<<endl;
-     break;
-
-     case PLACE:
-       cout<<"Place"<<endl;
-     break;
-
-     case THING:
-       cout<<"Thing"<<endl;
-     break;
-
-     case SPORTS_PERSONALITY:
-       cout<<"Sports Personality"<<endl;
-     break;
-
-     case ACTOR:
-       cout<<"Actor"<<endl;
-     break;
-
-     default:
-       cerr<<"Incorrect category in file. Please call support for help."<<endl;
-       return true;
-  }
-
-  return false;
-}
-
 bool playHangman()
 {
   // Set strings to spaces
-  int ansSize = answer.size()+1;
-  for( int i=0; i<ansSize; i++)
-    lettersFound[i] = ' ';
-  for( int i=0; i<MaxTries; i++)
-    guessedLetters[i] = ' ';
+  int ansSize = answer.size();
+  char guessedLetters[MaxTries] = {' '};
 
+  //for( int i=0; i<ansSize; i++)
+  lettersFound = string(ansSize, ' ');
   int guessCtr = 0;
+  badGuessCtr = EMPTY;
 
+  printLogo();
+  printBoard(guessedLetters);
   // Run thru for the maximum amount of guesses allowed
   while(badGuessCtr<MaxBadGuesses)
   {
-    cout<<endl<<"Letters already selected: ["<<guessedLetters<<"]";
-    cout<<endl<<"Please select a letter: ";
+cout<<"Guessed letters: ["<<guessedLetters<<"]";
+    cout<<endl<<"Please select a letter. Type '?' for a hint: ";
+    char ch;
     cin >> ch;
     ch = toupper(ch);
+
+    if(ch == '?')
+    {
+     cout<<"Hint: "<<hint<<endl<<endl;
+     continue;
+    }
 
     bool alreadyGuessed = false;
 
     // Check to see if user guessed this letter already
-    for( int i=0; i<ansSize; i++)
+    for(int i=0; i<ansSize; i++)
     {
-cout<<"try # "<<i<<endl;
-      if(ch == guessedLetters[i])
+      if(guessedLetters[i] == ch)
       {
         cout<<"You already guessed "<<ch<<" . Please guess again."<<endl;
         alreadyGuessed=true;
@@ -140,174 +65,38 @@ cout<<"try # "<<i<<endl;
       }
     }
 
-cout<<"Found";
-char t;
-cin>>t;
+    solved = false;
+    int i = 0;
+
    // Check to see if letter was found
    if(found)
    {
-     cout<<endl<<"You found a letter: [" << lettersFound << "]" <<endl;
-     //Check if game is solved
-     for(int i=0;i<ansSize;i++)
+     //Letter found. Check if game is solved
+     for(i=0;i<ansSize;i++)
      {
        if(lettersFound[i] != answer[i])
-       {
-         cout<<"Incorrect guess. Please try again."<<endl;
-         badGuessCtr++;
-         printLogo();
-         printBoard();
-         continue;
-       }
+        break;
      }
-   return true;
+     if(i == ansSize)
+       solved = true;
    }
+   else    // Letter not found
+   {
+     cout<<"Incorrect guess. Please try again."<<endl;
+     badGuessCtr++;
+     printLogo();
+     printBoard(guessedLetters);
+     continue;
+    }
+
+  printLogo();
+  printBoard(guessedLetters);
+
+  if(solved)
+      return true;
   }  //While loop
 
 return false;
-}
-
-void printLogo()
-{
-  system("clear");
-  cout<<endl<<endl<<endl<<endl;
-
-  cout <<" _    _      __       _    _  _____   _          __       _    _"<<endl;
-  cout <<"| |  | |    /  \\    |\\ \\  | ||  ___||\\ \\  /|    /  \\    |\\ \\  | |"<<endl;
-  cout <<"| |__| |   / /\\ \\   | \\ \\ | || |    | \\ \\/ |   / /\\ \\   | \\ \\ | |"<<endl;
-  cout <<"|  __  |  / /__\\ \\  | |\\ \\| || | __ | |\\/| |  / /__\\ \\  | |\\ \\| |"<<endl;
-  cout <<"| |  | | / /    \\ \\ | | \\ \\ || |_| || |  | | / /    \\ \\ | | \\ \\ |"<<endl;
-  cout <<"|_|  |_|/_/      \\_\\|_|  \\_\\||_____||_|  |_|/_/      \\_\\|_|  \\_\\|"<<endl;
-
-  cout<<endl<<endl<<"  Brought to you by Gina Shaw, Kerry McAdams and Tarnjot Parhar"<<endl<<endl;
-  return;
-}
-
-void printBoard()
-{
-  cout<<"                  CATEGORY: "<<endl<<endl;
-
-  cout<<"                     ____________"<<endl;
-  cout<<"                     |          |"<<endl;
-  if(badGuessCtr == 0)
-  {
-    cout<<"                     |"<<endl;
-    cout<<"                     |"<<endl;
-    cout<<"                     |"<<endl;
-    cout<<"                     |"<<endl;
-    cout<<"                     |"<<endl;
-    cout<<"                     |"<<endl;
-  }
-
-  switch(badGuessCtr)
-  {
-  case HEAD:
-    cout<<"                     |         _|_"<<endl;
-    cout<<"                     |        |   |"<<endl;
-    cout<<"                     |        |___|"<<endl;
-    cout<<"                     |"<<endl;
-    cout<<"                     |"<<endl;
-    cout<<"                     |"<<endl;
-    cout<<"                     |"<<endl;
-  break;
-
-  case BODY:
-    cout<<"                     |         _|_"<<endl;
-    cout<<"                     |        |   |"<<endl;
-    cout<<"                     |        |___|"<<endl;
-    cout<<"                     |          |"<<endl;
-    cout<<"                     |"<<endl;
-    cout<<"                     |"<<endl;
-    cout<<"                     |"<<endl;
-    break;
-
-  case RT_ARM:
-    cout<<"                     |         _|_"<<endl;
-    cout<<"                     |        |   |"<<endl;
-    cout<<"                     |        |___|"<<endl;
-    cout<<"                     |          |"<<endl;
-    cout<<"                     |          |\\"<<endl;
-    cout<<"                     |"<<endl;
-    cout<<"                     |"<<endl;
-    break;
-
-  case LEFT_ARM:
-    cout<<"                     |         _|_"<<endl;
-    cout<<"                     |        |   |"<<endl;
-    cout<<"                     |        |___|"<<endl;
-    cout<<"                     |          |"<<endl;
-    cout<<"                     |         /|\\"<<endl;
-    cout<<"                     |"<<endl;
-    cout<<"                     |"<<endl;
-    break;
-
-  case RT_LEG:
-    cout<<"                     |         _|_"<<endl;
-    cout<<"                     |        |   |"<<endl;
-    cout<<"                     |        |___|"<<endl;
-    cout<<"                     |          |"<<endl;
-    cout<<"                     |         /|\\"<<endl;
-    cout<<"                     |          |"<<endl;
-    cout<<"                     |           \\"<<endl;
-    break;
-
-  case LEFT_LEG:
-    cout<<"                     |         _|_"<<endl;
-    cout<<"                     |        |   |"<<endl;
-    cout<<"                     |        |___|"<<endl;
-    cout<<"                     |          |"<<endl;
-    cout<<"                     |         /|\\"<<endl;
-    cout<<"                     |          |"<<endl;
-    cout<<"                     |         / \\"<<endl;
-    break;
-
-  case RT_EYE:
-    cout<<"                     |         _|_"<<endl;
-    cout<<"                     |        |  .|"<<endl;
-    cout<<"                     |        |___|"<<endl;
-    cout<<"                     |          |"<<endl;
-    cout<<"                     |         /|\\"<<endl;
-    cout<<"                     |          |"<<endl;
-    cout<<"                     |         / \\"<<endl;
-    break;
-
-  case LEFT_EYE:
-    cout<<"                     |         _|_"<<endl;
-    cout<<"                     |        |. .|"<<endl;
-    cout<<"                     |        |___|"<<endl;
-    cout<<"                     |          |"<<endl;
-    cout<<"                     |         /|\\"<<endl;
-    cout<<"                     |          |"<<endl;
-    cout<<"                     |         / \\"<<endl;
-    break;
-
-  case MOUTH:
-    cout<<"                     |         _|_"<<endl;
-    cout<<"                     |        |. .|"<<endl;
-    cout<<"                     |        |_-_|"<<endl;
-    cout<<"                     |          |"<<endl;
-    cout<<"                     |         /|\\"<<endl;
-    cout<<"                     |          |"<<endl;
-    cout<<"                     |         / \\"<<endl;
-    break;
-  }
-
-  cout<<"                   __|________________"<<endl;
-  cout<<"                  /  |               /|"<<endl;
-  cout<<"                 /__________________/ |"<<endl;
-  cout<<"                 |__________________|/ "<<endl;
-  if(badGuessCtr != MaxBadGuesses)
-    printKeyboard();
-
-  return;
-}
-
-void printKeyboard()
-{
-  cout<<endl<<"               ____________________________  "<<endl;
-  cout<<"              | "<<AthruM<<" |"<<endl;
-  cout<<"              | "<<NthruZ<<" | "<<endl;
-  cout<<"              |___________________________|  "<<endl<<endl;
-  return;
 }
 
 bool readFile()
@@ -341,29 +130,26 @@ bool readFile()
   line.clear();  //clearing line again
   line = wordVec.at(randomRange);
 
-  string str = line.substr(21);
+  string str = line.substr(MaxSize+1);
   int hintSize = str.size();
-  answer = line.substr(1,20);
+  answer = line.substr(1,MaxSize);
   boost::algorithm::trim(answer);  
-cout<<answer<<endl;
-cout<<"ans size="<<answer.size();
 
-cout<<"hint size: "<<hintSize<<endl;
-cout<<"hint: "<<str<<endl;
+cout<<answer<<endl;
+
+  hint = line.substr(MaxSize+1,hintSize);
   // Close the file stream
   fileName.close();
 
   // Convert category from ascii to integer by subtracting 48
   int category = line[0] - 48;
-//  if(readCategoryFile(category))
-  //   return true;
+  if(readCategoryFile(category))
+    return true;
   return false;
 }
 
 bool readCategoryFile(int cat)
 {
-
-cout<<endl<<"in cat "<<cat<<endl;;
   // Open a file stream to the file with Hangman names
   ifstream catFileName("categories.txt");
 
@@ -375,15 +161,14 @@ cout<<endl<<"in cat "<<cat<<endl;;
   }
 
   string line;
-
+  line.clear();
   // Read each line in the file and find category
-  while(getline(catFileName, line,'\r'))
+  while(getline(catFileName, line))
   {
     int temp = line[0] - 48;
-    cout<<"temp = "<<temp<<endl;
-    if(temp == cat);  // get description
+    if(temp == cat)  // get description
     {
-      //cout<<line<<endl;
+      categoryDesc = line.substr(1,MaxCatSize);
       // Close the file stream
       catFileName.close();
       return false;
@@ -396,3 +181,184 @@ cout<<endl<<"in cat "<<cat<<endl;;
  return true;
 }
 
+void printLogo()
+{
+  //system("clear");
+  cout<<endl<<endl<<endl<<endl;
+
+  cout <<"  _    _      __       _    _  _____   _          __       _    _"<<endl;
+  cout <<" | |  | |    /  \\    |\\ \\  | ||  ___||\\ \\  /|    /  \\    |\\ \\  | |"<<endl;
+  cout <<" | |__| |   / /\\ \\   | \\ \\ | || |    | \\ \\/ |   / /\\ \\   | \\ \\ | |"<<endl;
+  cout <<" |  __  |  / /__\\ \\  | |\\ \\| || | __ | |\\/| |  / /__\\ \\  | |\\ \\| |"<<endl;
+  cout <<" | |  | | / /    \\ \\ | | \\ \\ || |_| || |  | | / /    \\ \\ | | \\ \\ |"<<endl;
+  cout <<" |_|  |_|/_/      \\_\\|_|  \\_\\||_____||_|  |_|/_/      \\_\\|_|  \\_\\|"<<endl;
+
+  cout<<endl<<endl<<"   Brought to you by Gina Shaw, Kerry McAdams and Tarnjot Parhar"<<endl<<endl;
+  return;
+}
+
+void printBoard(string guesses)
+{
+  cout<<"                  Category: "<<categoryDesc<<endl<<endl;
+  if(solved)
+  {
+    cout<<"                            ___"<<endl;
+    cout<<"                           |. .|"<<endl;
+    cout<<"                           |_-_|"<<endl;
+    cout<<"                             |"<<endl;
+    cout<<"                            \\|/"<<endl;
+    cout<<"                    _________|_________"<<endl; 
+    cout<<"                   /        / \\       /|"<<endl;
+    cout<<"                  /__________________/ |"<<endl;
+    cout<<"                  |__________________|/ "<<endl;
+    return;
+  }
+
+  cout<<"                     ____________"<<endl;
+  cout<<"                     |          |"<<endl;
+
+  switch(badGuessCtr)
+  {
+  case EMPTY:
+    cout<<"                     |"<<endl;
+    cout<<"                     |"<<endl;
+    cout<<"                     |"<<endl;
+    cout<<"                     |"<<endl;
+    cout<<"                     |"<<endl;
+    cout<<"                     |"<<endl;
+  break;
+
+  case HEAD:
+    cout<<"                     |         _|_"<<endl;
+    cout<<"                     |        |   |"<<endl;
+    cout<<"                     |        |___|"<<endl;
+    cout<<"                     |"<<endl;
+    cout<<"                     |"<<endl;
+    cout<<"                     |"<<endl;
+    cout<<"                     |"<<endl;
+  break;
+
+  case BODY:
+    cout<<"                     |         _|_"<<endl;
+    cout<<"                     |        |   |"<<endl;
+    cout<<"                     |        |___|"<<endl;
+    cout<<"                     |          |"<<endl;
+    cout<<"                     |"<<endl;
+    cout<<"                     |"<<endl;
+    cout<<"                     |"<<endl;
+    break;
+
+  case LEFT_ARM:
+    cout<<"                     |         _|_"<<endl;
+    cout<<"                     |        |   |"<<endl;
+    cout<<"                     |        |___|"<<endl;
+    cout<<"                     |          |"<<endl;
+    cout<<"                     |         /|"<<endl;
+    cout<<"                     |"<<endl;
+    cout<<"                     |"<<endl;
+    break;
+
+  case RT_ARM:
+    cout<<"                     |         _|_"<<endl;
+    cout<<"                     |        |   |"<<endl;
+    cout<<"                     |        |___|"<<endl;
+    cout<<"                     |          |"<<endl;
+    cout<<"                     |         /|\\"<<endl;
+    cout<<"                     |"<<endl;
+    cout<<"                     |"<<endl;
+    break;
+ 
+  case LEFT_LEG:
+    cout<<"                     |         _|_"<<endl;
+    cout<<"                     |        |   |"<<endl;
+    cout<<"                     |        |___|"<<endl;
+    cout<<"                     |          |"<<endl;
+    cout<<"                     |         /|\\"<<endl;
+    cout<<"                     |          |"<<endl;
+    cout<<"                     |         /"<<endl;
+    break;
+
+  case RT_LEG:
+    cout<<"                     |         _|_"<<endl;
+    cout<<"                     |        |   |"<<endl;
+    cout<<"                     |        |___|"<<endl;
+    cout<<"                     |          |"<<endl;
+    cout<<"                     |         /|\\"<<endl;
+    cout<<"                     |          |"<<endl;
+    cout<<"                     |         / \\"<<endl;
+    break;
+
+  case LEFT_EYE:
+    cout<<"                     |         _|_"<<endl;
+    cout<<"                     |        |.  |"<<endl;
+    cout<<"                     |        |___|"<<endl;
+    cout<<"                     |          |"<<endl;
+    cout<<"                     |         /|\\"<<endl;
+    cout<<"                     |          |"<<endl;
+    cout<<"                     |         / \\"<<endl;
+    break;
+
+ case RT_EYE:
+    cout<<"                     |         _|_"<<endl;
+    cout<<"                     |        |. .|"<<endl;
+    cout<<"                     |        |___|"<<endl;
+    cout<<"                     |          |"<<endl;
+    cout<<"                     |         /|\\"<<endl;
+    cout<<"                     |          |"<<endl;
+    cout<<"                     |         / \\"<<endl;
+    break;
+
+  case MOUTH:
+    cout<<"                     |         _|_"<<endl;
+    cout<<"                     |        |. .|"<<endl;
+    cout<<"                     |        |_-_|"<<endl;
+    cout<<"                     |          |"<<endl;
+    cout<<"                     |         /|\\"<<endl;
+    cout<<"                     |          |"<<endl;
+    cout<<"                     |         / \\"<<endl;
+    break;
+  }
+
+  cout<<"                   __|________________"<<endl;
+  cout<<"                  /  |               /|"<<endl;
+  cout<<"                 /__________________/ |"<<endl;
+  cout<<"                 |__________________|/ "<<endl;
+  if(badGuessCtr != MaxBadGuesses)
+    printKeyboard(guesses);
+
+  return;
+}
+
+void printKeyboard(string guess)
+{
+ cout<<endl<<endl<<"            -----------------------------------"<<endl;
+ string s;
+ cout<<"           |                                   |"<<endl;
+ cout<<"           |     ";
+   for (char i = 'A'; i <= 'M'; i++)
+   {
+     if (guess.find(i) == string::npos)
+     {
+       s += i;
+       s += " ";
+     }
+     else
+       s += "  ";
+   }
+ cout<<s<<"    |"<<endl;
+ string l;
+ cout<<"           |     ";
+   for (char i = 'N'; i <= 'Z'; i++)
+   {
+     if (guess.find(i) == string::npos)
+     {
+       l += i;
+       l += " ";
+     }
+     else
+       l += "  ";
+   }
+ cout<<l<<"    |"<<endl;
+ cout<<"           |                                   |"<<endl;
+ cout<<"            -----------------------------------"<<endl;
+}
