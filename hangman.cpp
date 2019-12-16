@@ -21,11 +21,10 @@ bool playHangman()
   solved = false;
 
   printLogo();
-  printBoard(lettersFound);
+  printBoard();
   // Run thru for the maximum amount of guesses allowed
   while(badGuessCtr<MaxBadGuesses)
   {
-cout<<"Guessed letters: ["<<guessedLetters<<"]";
     cout<<endl<<"Please select a letter. Type '?' for a hint: ";
     char ch;
     cin >> ch;
@@ -80,18 +79,18 @@ cout<<"Guessed letters: ["<<guessedLetters<<"]";
      if(i == ansSize)
        solved = true;
    }
-   else    // Letter not found
+   else    // letter not found
    {
      cout<<"Incorrect guess. Please try again."<<endl;
      badGuessCtr++;
      printLogo();
-     printBoard(lettersFound);
+     printBoard();
      continue;
     }
 
   // display board
   printLogo();
-  printBoard(lettersFound);
+  printBoard();
 
   // check if game was solved
   if(solved)
@@ -138,10 +137,9 @@ bool readAnsFile()
   answer = line.substr(1,MaxSize);
   boost::algorithm::trim(answer);  
 
-cout<<answer<<endl;
-
   // get the hint for this answer
   hint = line.substr(MaxSize+1,hintSize);
+
   // Close the file stream
   fileName.close();
 
@@ -182,11 +180,11 @@ bool readCategoryFile(int cat)
       return false;
     }
   }
- cout<<"Category not found. Please call Customer Support";
+  cout<<"Category not found. Please call Customer Support";
 
- // Close the file stream
- catFileName.close();
- return true;
+  // Close the file stream
+  catFileName.close();
+  return true;
 }
 
 void printLogo()
@@ -206,7 +204,7 @@ void printLogo()
   return;
 }
 
-void printBoard(string guess)
+void printBoard()
 {
   // print out the board according to progress in the game
   cout<<"                  Category: "<<categoryDesc<<endl<<endl;
@@ -224,7 +222,7 @@ void printBoard(string guess)
     cout<<"                  /__________________/ |"<<endl;
     cout<<"                  |__________________|/ "<<endl;
     // print out answer
-    cout<<endl<<endl<<"               "<<answer<<endl<<endl;
+    printWord();
     return;
   }
 
@@ -283,7 +281,7 @@ void printBoard(string guess)
     cout<<"                     |"<<endl;
     cout<<"                     |"<<endl;
     break;
- 
+
   case LEFT_LEG:
     cout<<"                     |         _|_"<<endl;
     cout<<"                     |        |   |"<<endl;
@@ -341,29 +339,27 @@ void printBoard(string guess)
   cout<<"                 /__________________/ |"<<endl;
   cout<<"                 |__________________|/ "<<endl;
 
-  // Check if game is over
-  if(badGuessCtr >= MaxBadGuesses)
-    // print out answer
-    cout<<endl<<endl<<"               "<<answer<<endl<<endl;
+  // If didn't lose, print out keyboard
+  if(badGuessCtr <= MaxBadGuesses)
+  {
+    printWord();
+    printKeyboard();
+  }
   else
-    printKeyboard(guess);
-
+    printWord();
   return;
 }
 
-void printKeyboard(string guess)
+void printKeyboard()
 {
- // Call routine to print out the answer letters
- printLetters(guess);
-
- // Print out the keyboard. Remove letters that are already guessed
- cout<<endl<<endl<<"            -----------------------------------"<<endl;
- string s;
- cout<<"           |                                   |"<<endl;
- cout<<"           |     ";
+   // Print out the keyboard. Remove letters that are already guessed
+   cout<<endl<<"            -----------------------------------"<<endl;
+   string s;
+   cout<<"           |                                   |"<<endl;
+   cout<<"           |     ";
    for (char i = 'A'; i <= 'M'; i++)
    {
-     if (guess.find(i) == string::npos)
+     if (lettersFound.find(i) == string::npos)
      {
        s += i;
        s += " ";
@@ -371,12 +367,12 @@ void printKeyboard(string guess)
      else
        s += "  ";
    }
- cout<<s<<"    |"<<endl;
- string l;
- cout<<"           |     ";
+   cout<<s<<"    |"<<endl;
+   string l;
+   cout<<"           |     ";
    for (char i = 'N'; i <= 'Z'; i++)
    {
-     if (guess.find(i) == string::npos)
+     if (lettersFound.find(i) == string::npos)
      {
        l += i;
        l += " ";
@@ -384,23 +380,41 @@ void printKeyboard(string guess)
      else
        l += "  ";
    }
- cout<<l<<"    |"<<endl;
- cout<<"           |                                   |"<<endl;
- cout<<"            -----------------------------------"<<endl;
+   cout<<l<<"    |"<<endl;
+   cout<<"           |                                   |"<<endl;
+   cout<<"            -----------------------------------"<<endl;
 }
 
-void printLetters(string guess)
+void printWord()
 {
-  //  Print out answer. Use underscore character for missing letters
-  cout<<endl<<endl<<"               ";
-  for(int i=0; i<ansSize; i++)
+  //variables for centering the word
+  int lengthOfKeyboard = KeyboardLen;
+  int spaceNum;
+  int sideSpaceNum;
+  string space;
+
+  //sets blank string
+  string underscore = string(answer.size(), '_');
+
+  // Check if game over
+  if(badGuessCtr < MaxBadGuesses)
   {
-   if(answer[i] == ' ')
-     cout<<"  ";
-   else if(guess[i] == ' ')
-     cout<<"_ ";
-   else
-     cout<<guess[i];
+    //for loop to add letters as they're being guessed
+    for(int i=0;i<answer.size(); i++)
+    {
+      if(lettersFound[i] == answer[i])
+        underscore[i] = lettersFound[i];
+    }
   }
-  cout<<endl<<endl;
+  else
+    underscore = answer;  // game over print answer
+
+  //centers the word being guessed based on word and keyboard size
+  if(underscore.size()<lengthOfKeyboard)
+  {
+    spaceNum = lengthOfKeyboard - underscore.size();
+    sideSpaceNum = spaceNum/2;
+    space = string(sideSpaceNum,' ');
+    cout<<endl<<endl<<space<<"     *"<<underscore<<"*"<<space<<endl;
+  }
 }

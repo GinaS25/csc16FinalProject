@@ -12,6 +12,7 @@
   const int MaxCatSize = 25;   //Max size of category description
   const int PoleSize = 4;  //Size of pole in board
   const int MaxTries = MaxBadGuesses+MaxSize;
+  const int KeyboardLen = 47;
 
   string answer;
   int ansSize = 0;
@@ -25,8 +26,8 @@
 
   /* prototypes */
   void printLogo();
-  void printBoard(string str);
-  void printKeyboard(string str);
+  void printBoard();
+  void printKeyboard();
   bool readCategoryFile(int cat);
-  void printLetters(string str);
+  void printWord();
 #endif //HANGMAN_H

@@ -16,11 +16,11 @@ int main()
     if(readAnsFile())
       return 0;
     if(playHangman())
-      cout<<endl<<"              Congratulations! You won!!! ";
+      cout<<endl<<"                Congratulations! You won!!! ";
     else
-      cout<<endl<<"                      Game Over";
+      cout<<endl<<"                        Game Over";
 
-    cout<<endl<<endl<< "        Do you want to play again? Enter 'Y' for Yes: ";
+    cout<<endl<<endl<<endl<< "        Do you want to play again? Enter 'Y' for Yes: ";
     char ch;
     cin>>ch;
     if(toupper(ch)!='Y')
