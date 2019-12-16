@@ -12,16 +12,16 @@ using namespace std;
 bool playHangman()
 {
   // Set strings to spaces
-  int ansSize = answer.size();
+  ansSize = answer.size();
   char guessedLetters[MaxTries] = {' '};
 
-  //for( int i=0; i<ansSize; i++)
   lettersFound = string(ansSize, ' ');
   int guessCtr = 0;
   badGuessCtr = EMPTY;
+  solved = false;
 
   printLogo();
-  printBoard(guessedLetters);
+  printBoard(lettersFound);
   // Run thru for the maximum amount of guesses allowed
   while(badGuessCtr<MaxBadGuesses)
   {
@@ -31,6 +31,7 @@ cout<<"Guessed letters: ["<<guessedLetters<<"]";
     cin >> ch;
     ch = toupper(ch);
 
+    // check if user is asking for a hint
     if(ch == '?')
     {
      cout<<"Hint: "<<hint<<endl<<endl;
@@ -65,7 +66,6 @@ cout<<"Guessed letters: ["<<guessedLetters<<"]";
       }
     }
 
-    solved = false;
     int i = 0;
 
    // Check to see if letter was found
@@ -85,21 +85,24 @@ cout<<"Guessed letters: ["<<guessedLetters<<"]";
      cout<<"Incorrect guess. Please try again."<<endl;
      badGuessCtr++;
      printLogo();
-     printBoard(guessedLetters);
+     printBoard(lettersFound);
      continue;
     }
 
+  // display board
   printLogo();
-  printBoard(guessedLetters);
+  printBoard(lettersFound);
 
+  // check if game was solved
   if(solved)
       return true;
   }  //While loop
 
-return false;
+  // game was not solved
+  return false;
 }
 
-bool readFile()
+bool readAnsFile()
 {
   // Create a vector to store file contents.
   vector <string> wordVec;
@@ -111,7 +114,7 @@ bool readFile()
   if(!fileName.good())
   {
     cout<<"Unable to locate word file. Please contact Customer Support"<<endl;
-    return true;
+    return true;  //return error found
   }
 
   string line;
@@ -137,14 +140,19 @@ bool readFile()
 
 cout<<answer<<endl;
 
+  // get the hint for this answer
   hint = line.substr(MaxSize+1,hintSize);
   // Close the file stream
   fileName.close();
 
   // Convert category from ascii to integer by subtracting 48
   int category = line[0] - 48;
+
+  // get category description
   if(readCategoryFile(category))
-    return true;
+    return true;    //return error found
+
+  // return no errors found
   return false;
 }
 
@@ -183,6 +191,7 @@ bool readCategoryFile(int cat)
 
 void printLogo()
 {
+  //Print out Hangman logo
   //system("clear");
   cout<<endl<<endl<<endl<<endl;
 
@@ -197,9 +206,12 @@ void printLogo()
   return;
 }
 
-void printBoard(string guesses)
+void printBoard(string guess)
 {
+  // print out the board according to progress in the game
   cout<<"                  Category: "<<categoryDesc<<endl<<endl;
+
+  // Game solved. Print out free hangman
   if(solved)
   {
     cout<<"                            ___"<<endl;
@@ -211,12 +223,16 @@ void printBoard(string guesses)
     cout<<"                   /        / \\       /|"<<endl;
     cout<<"                  /__________________/ |"<<endl;
     cout<<"                  |__________________|/ "<<endl;
+    // print out answer
+    cout<<endl<<endl<<"               "<<answer<<endl<<endl;
     return;
   }
 
+  // print out top of gallow
   cout<<"                     ____________"<<endl;
   cout<<"                     |          |"<<endl;
 
+  // Print out progress based on how many bad guesses there are
   switch(badGuessCtr)
   {
   case EMPTY:
@@ -319,18 +335,28 @@ void printBoard(string guesses)
     break;
   }
 
+  // print out base
   cout<<"                   __|________________"<<endl;
   cout<<"                  /  |               /|"<<endl;
   cout<<"                 /__________________/ |"<<endl;
   cout<<"                 |__________________|/ "<<endl;
-  if(badGuessCtr != MaxBadGuesses)
-    printKeyboard(guesses);
+
+  // Check if game is over
+  if(badGuessCtr >= MaxBadGuesses)
+    // print out answer
+    cout<<endl<<endl<<"               "<<answer<<endl<<endl;
+  else
+    printKeyboard(guess);
 
   return;
 }
 
 void printKeyboard(string guess)
 {
+ // Call routine to print out the answer letters
+ printLetters(guess);
+
+ // Print out the keyboard. Remove letters that are already guessed
  cout<<endl<<endl<<"            -----------------------------------"<<endl;
  string s;
  cout<<"           |                                   |"<<endl;
@@ -361,4 +387,20 @@ void printKeyboard(string guess)
  cout<<l<<"    |"<<endl;
  cout<<"           |                                   |"<<endl;
  cout<<"            -----------------------------------"<<endl;
+}
+
+void printLetters(string guess)
+{
+  //  Print out answer. Use underscore character for missing letters
+  cout<<endl<<endl<<"               ";
+  for(int i=0; i<ansSize; i++)
+  {
+   if(answer[i] == ' ')
+     cout<<"  ";
+   else if(guess[i] == ' ')
+     cout<<"_ ";
+   else
+     cout<<guess[i];
+  }
+  cout<<endl<<endl;
 }

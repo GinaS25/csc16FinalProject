@@ -14,6 +14,7 @@
   const int MaxTries = MaxBadGuesses+MaxSize;
 
   string answer;
+  int ansSize = 0;
   string lettersFound;     // String with letters found
   string hint;
   char ch;
@@ -27,5 +28,5 @@
   void printBoard(string str);
   void printKeyboard(string str);
   bool readCategoryFile(int cat);
-
+  void printLetters(string str);
 #endif //HANGMAN_H

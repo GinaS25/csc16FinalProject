@@ -4,7 +4,7 @@ using namespace std;
 
 /* prototypes */
 bool playHangman();
-bool readFile();
+bool readAnsFile();
 
 /* This is a Hangman Game */
 
@@ -13,7 +13,7 @@ int main()
   // Play hangman until user exits
   for(;;)
   {
-    if(readFile())
+    if(readAnsFile())
       return 0;
     if(playHangman())
       cout<<endl<<"              Congratulations! You won!!! ";
