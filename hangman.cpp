@@ -16,6 +16,7 @@ bool playHangman()
   char guessedLetters[MaxTries] = {' '};
 
   lettersFound = string(ansSize, ' ');
+
   int guessCtr = 0;
   badGuessCtr = EMPTY;
   solved = false;
@@ -64,7 +65,6 @@ bool playHangman()
         found=true;
       }
     }
-
     int i = 0;
 
    // Check to see if letter was found
@@ -392,29 +392,40 @@ void printWord()
   int spaceNum;
   int sideSpaceNum;
   string space;
-
-  //sets blank string
-  string underscore = string(answer.size(), '_');
-
-  // Check if game over
-  if(badGuessCtr < MaxBadGuesses)
-  {
-    //for loop to add letters as they're being guessed
-    for(int i=0;i<answer.size(); i++)
-    {
-      if(lettersFound[i] == answer[i])
-        underscore[i] = lettersFound[i];
-    }
-  }
-  else
-    underscore = answer;  // game over print answer
+  int displayLen = ansSize + (ansSize-1);  // add for space between letters
+  string displayWord[displayLen];
 
   //centers the word being guessed based on word and keyboard size
-  if(underscore.size()<lengthOfKeyboard)
+  if(displayLen<lengthOfKeyboard)
   {
-    spaceNum = lengthOfKeyboard - underscore.size();
+    spaceNum = lengthOfKeyboard - displayLen;
     sideSpaceNum = spaceNum/2;
     space = string(sideSpaceNum,' ');
-    cout<<endl<<endl<<space<<"     *"<<underscore<<"*"<<space<<endl;
+    cout<<endl<<endl<<space<<"     ";
   }
+
+  if(badGuessCtr < MaxBadGuesses)  //Still playing or won
+  {
+    //  Print out answer. Use underscore character for missing letters
+    for(int i=0; i<ansSize; i++)
+    {
+     if(answer[i] == ' ')
+       cout<<"  ";
+     else if(lettersFound[i] == ' ')
+       cout<<"_ ";
+     else
+       cout<<lettersFound[i]<<" ";
+     }
+  }
+  else  //lost - print answer
+  {
+    for(int i=0; i<ansSize; i++)
+    {
+     if(answer[i] == ' ')
+       cout<<"  ";
+     else 
+       cout<<answer[i]<<" ";
+     }
+  }
+  cout<<endl<<endl;
 }
