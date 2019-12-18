@@ -10,3 +10,10 @@
 4PIZZA               Cheese
 5STEPHEN CURRY       Basketball
 6TOM CRUISE          Scientology
+1BARACK OBAMA        44th President
+2NEW YORK CITY       The Big Apple
+3LION                Simba
+4MACARONI AND CHEESE Cheese & Pasta
+5BEYONCE             All My Single Ladies
+6MERYL STREEP        The Devil Wears Prada
+
