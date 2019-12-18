@@ -355,48 +355,35 @@ void printBoard()
 
 void printKeyboard()
 {
-   // Print out the keyboard. Remove letters that are already guessed
+    // Print out the keyboard. Remove letters that are already guessed
    cout<<endl<<"            -----------------------------------"<<endl;
-   string s;
+   string topRow;
    cout<<"           |                                   |"<<endl;
    cout<<"           |     ";
    for (char i = 'A'; i <= 'M'; i++)
    {
      if (allLetters.find(i) == string::npos)
      {
-       s += i;
-       s += " ";
+       topRow += i;
+       topRow += " ";
      }
      else
-       s += "  ";
+       topRow += "  ";
    }
-   cout<<s<<"    |"<<endl;
-   string l;
+   cout<<topRow<<"    |"<<endl;
+   string bottomRow;
    cout<<"           |     ";
    for (char i = 'N'; i <= 'Z'; i++)
    {
      if (allLetters.find(i) == string::npos)
      {
-       s += i;
-       s += " ";
+       bottomRow += i;
+       bottomRow += " ";
      }
      else
-       s += "  ";
+       bottomRow += "  ";
    }
-   cout<<s<<"    |"<<endl;
-   string l;
-   cout<<"           |     ";
-   for (char i = 'N'; i <= 'Z'; i++)
-   {
-     if (allLetters.find(i) == string::npos)
-     {
-       l += i;
-       l += " ";
-     }
-     else
-       l += "  ";
-   }
-   cout<<l<<"    |"<<endl;
+   cout<<bottomRow<<"    |"<<endl;
    cout<<"           |                                   |"<<endl;
    cout<<"            -----------------------------------"<<endl;
 }
@@ -445,10 +432,3 @@ void printWord()
   }
   cout<<endl<<endl;
 }
-
-
-
-
-
-
-
