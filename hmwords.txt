@@ -4,3 +4,9 @@
 4SPAGHETTI           Pasta
 5SERENA WILLIAMS     Tennis
 6BRADLEY COOPER      Limitless
+1TAYLOR SWIFT        22
+2AMSTERDAM           Dutch
+3DINOSAUR            Jurassic World
+4PIZZA               Cheese
+5STEPHEN CURRY       Basketball
+6TOM CRUISE          Scientology
