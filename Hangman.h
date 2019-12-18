@@ -16,6 +16,7 @@
 
   string answer;
   int ansSize = 0;
+  string allLetters;   
   string lettersFound;     // String with letters found
   string hint;
   char ch;
