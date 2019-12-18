@@ -6,6 +6,9 @@ using namespace std;
 bool playHangman();
 bool readAnsFile();
 
+/* Score keeper */
+int score = 0;
+
 /* This is a Hangman Game */
 
 int main()
@@ -16,7 +19,10 @@ int main()
     if(readAnsFile())
       return 0;
     if(playHangman())
-      cout<<endl<<"                Congratulations! You won!!! ";
+    {
+      cout<<endl<<"                Congratulations! You won!!! "<<endl;
+      score++;
+      cout<<"                          Score: "<<score<<endl;}
     else
       cout<<endl<<"                        Game Over";
 
