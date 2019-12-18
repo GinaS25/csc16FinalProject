@@ -14,7 +14,7 @@ bool playHangman()
   // Set strings to spaces
   ansSize = answer.size();
   char guessedLetters[MaxTries] = {' '};
-
+  allLetters = string(MaxTries, ' ');     // Copy of guessedLetters created to use for keyboard 
   lettersFound = string(ansSize, ' ');
 
   int guessCtr = 0;
@@ -33,7 +33,7 @@ bool playHangman()
 
     // check if user is asking for a hint
     if(ch == '?')
-    {
+    { 
      cout<<"Hint: "<<hint<<endl<<endl;
      continue;
     }
@@ -45,7 +45,7 @@ bool playHangman()
     {
       if(guessedLetters[i] == ch)
       {
-        cout<<"You already guessed "<<ch<<" . Please guess again."<<endl;
+       	cout<<"You already guessed "<<ch<<" . Please guess again."<<endl;
         alreadyGuessed=true;
         break;
       }
@@ -54,14 +54,17 @@ bool playHangman()
       continue;   //Get another letter
 
     // Letter not guessed yet. See if it's part of answer
+    allLetters += ch;
+    cout<<"All Letters = "<<allLetters<<endl;
+    
     guessedLetters[guessCtr++] = ch;
-    int found = false;
+      int found = false;
 
     for( int i=0; i<ansSize; i++)
     {
       if( answer[i] == ch)
       {
-        lettersFound[i] = ch;  // Fill the letter into answer string & keep looking
+       	lettersFound[i] = ch;  // Fill the letter into answer string & keep looking
         found=true;
       }
     }
@@ -86,9 +89,9 @@ bool playHangman()
      printLogo();
      printBoard();
      continue;
-    }
+   }
 
-  // display board
+   // display board
   printLogo();
   printBoard();
 
@@ -221,7 +224,7 @@ void printBoard()
     cout<<"                   /        / \\       /|"<<endl;
     cout<<"                  /__________________/ |"<<endl;
     cout<<"                  |__________________|/ "<<endl;
-    // print out answer
+     // print out answer
     printWord();
     return;
   }
@@ -240,7 +243,7 @@ void printBoard()
     cout<<"                     |"<<endl;
     cout<<"                     |"<<endl;
     cout<<"                     |"<<endl;
-  break;
+    break;
 
   case HEAD:
     cout<<"                     |         _|_"<<endl;
@@ -250,7 +253,7 @@ void printBoard()
     cout<<"                     |"<<endl;
     cout<<"                     |"<<endl;
     cout<<"                     |"<<endl;
-  break;
+    break;
 
   case BODY:
     cout<<"                     |         _|_"<<endl;
@@ -359,7 +362,7 @@ void printKeyboard()
    cout<<"           |     ";
    for (char i = 'A'; i <= 'M'; i++)
    {
-     if (lettersFound.find(i) == string::npos)
+     if (allLetters.find(i) == string::npos)
      {
        s += i;
        s += " ";
@@ -372,7 +375,20 @@ void printKeyboard()
    cout<<"           |     ";
    for (char i = 'N'; i <= 'Z'; i++)
    {
-     if (lettersFound.find(i) == string::npos)
+     if (allLetters.find(i) == string::npos)
+     {
+       s += i;
+       s += " ";
+     }
+     else
+       s += "  ";
+   }
+   cout<<s<<"    |"<<endl;
+   string l;
+   cout<<"           |     ";
+   for (char i = 'N'; i <= 'Z'; i++)
+   {
+     if (allLetters.find(i) == string::npos)
      {
        l += i;
        l += " ";
@@ -429,3 +445,10 @@ void printWord()
   }
   cout<<endl<<endl;
 }
+
+
+
+
+
+
+
